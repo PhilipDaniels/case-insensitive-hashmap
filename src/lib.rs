@@ -9,8 +9,6 @@ use unicase::UniCase;
 
 type Key = UniCase<String>;
 
-//pub type Ci2<V, S = RandomState> = HashMap<Key, V, S>;
-
 #[derive(Debug, Default, Clone)]
 pub struct CiHashMap<V, S = RandomState>
 where
@@ -22,14 +20,14 @@ where
 impl<V, S> Eq for CiHashMap<V, S>
 where
     V: Eq,
-    S: BuildHasher + Default, // TODO: Remove this Default
+    S: BuildHasher
 {
 }
 
 impl<V, S> PartialEq for CiHashMap<V, S>
 where
     V: PartialEq,
-    S: BuildHasher + Default, // TODO: Remove this Default
+    S: BuildHasher
 {
     fn eq(&self, other: &CiHashMap<V, S>) -> bool {
         if self.len() != other.len() {
@@ -67,10 +65,9 @@ where
     }
 }
 
-impl<K, V, S> FromIterator<(K, V)> for CiHashMap<V, S>
+impl<K, V> FromIterator<(K, V)> for CiHashMap<V>
 where
     K: Into<Key>,
-    S: BuildHasher + Default,
 {
     fn from_iter<T: IntoIterator<Item = (K, V)>>(iter: T) -> Self {
         let mut map = Self::new();
@@ -81,7 +78,7 @@ where
 
 impl<'a, V, S> IntoIterator for &'a CiHashMap<V, S>
 where
-    S: BuildHasher + Default,
+    S: BuildHasher
 {
     type Item = (&'a Key, &'a V);
     type IntoIter = Iter<'a, Key, V>;
@@ -93,7 +90,7 @@ where
 
 impl<'a, V, S> IntoIterator for &'a mut CiHashMap<V, S>
 where
-    S: BuildHasher + Default,
+    S: BuildHasher
 {
     type Item = (&'a Key, &'a mut V);
     type IntoIter = IterMut<'a, Key, V>;
@@ -105,7 +102,7 @@ where
 
 impl<V, S> IntoIterator for CiHashMap<V, S>
 where
-    S: BuildHasher, // + Default
+    S: BuildHasher
 {
     type Item = (Key, V);
     type IntoIter = IntoIter<Key, V>;
@@ -128,23 +125,23 @@ where
     }
 }
 
-impl<V, S> CiHashMap<V, S>
-where
-    S: BuildHasher + Default, // TODO: Remove this Default
+impl<V> CiHashMap<V, RandomState>
 {
-    pub fn new() -> Self
-    where
-        S: Default, // TODO: Remove this Default
-    {
+    pub fn new() -> Self{
         Self {
             inner: Default::default(),
         }
     }
 
-    pub fn with_capacity(capacity: usize) -> CiHashMap<V, S> {
-        Self::with_capacity_and_hasher(capacity, S::default())
+    pub fn with_capacity(capacity: usize) -> CiHashMap<V, RandomState> {
+        Self::with_capacity_and_hasher(capacity, Default::default())
     }
+}
 
+impl<V, S> CiHashMap<V, S>
+where
+    S: BuildHasher
+{
     pub fn with_hasher(hash_builder: S) -> Self {
         Self::with_capacity_and_hasher(0, hash_builder)
     }
