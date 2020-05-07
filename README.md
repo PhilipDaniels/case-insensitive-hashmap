@@ -21,3 +21,6 @@ While the API is ergonomic, it's not very efficient, as it
 creates new `UniCase` values when you do queries. It would probably
 be better to extract the hashing algorithm from UniCase and use
 that directly.
+
+I wouldn't use this in performance-sensitive code, but for small
+hashmaps it should be fine. And when you need it, you need it.
