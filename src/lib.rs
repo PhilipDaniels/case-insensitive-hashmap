@@ -583,6 +583,6 @@ mod tests {
     fn from_iterator() {
         let v = vec![("A", 2), ("B", 3), ("C", 4)];
 
-        let map: CiHashMap<u8> = v.into_iter().collect();
+        let _map: CiHashMap<u8> = v.into_iter().collect();
     }
 }
