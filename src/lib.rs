@@ -127,12 +127,16 @@ where
 
 impl<V> CaseInsensitiveHashMap<V, RandomState>
 {
+    /// Creates a new CaseInsensitiveHashMap with the default
+    /// hasher and capacity.
     pub fn new() -> Self{
         Self {
             inner: Default::default(),
         }
     }
 
+    /// Creates a new CaseInsensitiveHashMap with the default
+    /// hasher and specified capacity.
     pub fn with_capacity(capacity: usize) -> CaseInsensitiveHashMap<V, RandomState> {
         Self::with_capacity_and_hasher(capacity, Default::default())
     }
@@ -142,96 +146,145 @@ impl<V, S> CaseInsensitiveHashMap<V, S>
 where
     S: BuildHasher
 {
+    /// Creates a new CaseInsensitiveHashMap with the specified
+    /// hasher and default capacity.
     pub fn with_hasher(hash_builder: S) -> Self {
         Self::with_capacity_and_hasher(0, hash_builder)
     }
 
+    /// Creates a new CaseInsensitiveHashMap with the specified
+    /// capacity and hasher.
     pub fn with_capacity_and_hasher(capacity: usize, hash_builder: S) -> CaseInsensitiveHashMap<V, S> {
         Self {
             inner: HashMap::<Key, V, S>::with_capacity_and_hasher(capacity, hash_builder),
         }
     }
 
+    /// Returns the number of elements the map can hold without reallocating.
+    ///
+    /// This number is a lower bound; the HashMap might be able to hold more, but is guaranteed
+    /// to be able to hold at least this many.
     pub fn capacity(&self) -> usize {
         self.inner.capacity()
     }
 
+    /// Clears the map, removing all key-value pairs. Keeps the allocated memory for reuse.
     pub fn clear(&mut self) {
         self.inner.clear();
     }
 
+    /// Returns true if the map contains a value for the specified key.
+    /// The key may be a String, str or UniCase value.
     pub fn contains_key<K: Into<Key>>(&self, k: K) -> bool {
         let key = k.into();
         self.inner.contains_key(&key)
     }
 
+    /// Clears the map, returning all key-value pairs as an iterator. Keeps the allocated memory for reuse.
     pub fn drain(&mut self) -> Drain<Key, V> {
         self.inner.drain()
     }
 
+    /// Gets the given key's corresponding entry in the map for in-place manipulation.
     pub fn entry<K: Into<Key>>(&mut self, k: K) -> Entry<Key, V> {
         let key = k.into();
         self.inner.entry(key)
     }
 
+    /// Returns a reference to the value corresponding to the key.
+    /// The key may be a String, str or UniCase value.
     pub fn get<K: Into<Key>>(&self, k: K) -> Option<&V> {
         let key = k.into();
         self.inner.get(&key)
     }
 
+    /// Returns the key-value pair corresponding to the supplied key.
+    /// The key may be a String, str or UniCase value.
     pub fn get_key_value<K: Into<Key>>(&self, k: K) -> Option<(&Key, &V)> {
         let key = k.into();
         self.inner.get_key_value(&key)
     }
 
+    /// Returns a mutable reference to the value corresponding to the key.
+    /// The key may be a String, str or UniCase value.
     pub fn get_mut<K: Into<Key>>(&mut self, k: K) -> Option<&mut V> {
         let key = k.into();
         self.inner.get_mut(&key)
     }
 
+    /// Returns a reference to the map's `BuildHasher`.
     pub fn hasher(&self) -> &S {
         self.inner.hasher()
     }
 
+    /// Inserts a key-value pair into the map.
+    /// If the map did not have this key present, None is returned.
+    /// If the map did have this key present, the value is updated, and the old value is returned.
+    /// The key is not updated, though; this matters for types that can be == without being identical.
+    /// See the module-level documentation of [HashMap](https://doc.rust-lang.org/std/collections/index.html#insert-and-complex-keys)
+    // for more.
     pub fn insert<K: Into<Key>>(&mut self, k: K, v: V) -> Option<V> {
         let key = k.into();
         self.inner.insert(key, v)
     }
 
+    /// Returns true if the map contains no elements.
     pub fn is_empty(&self) -> bool {
         self.inner.is_empty()
     }
 
+    /// An iterator visiting all key-value pairs in arbitrary order.
+    /// The iterator element type is (&'a UniCase<String>, &'a V).
     pub fn iter(&self) -> Iter<Key, V> {
         self.inner.iter()
     }
 
+    /// An iterator visiting all key-value pairs in arbitrary order,
+    /// with mutable references to the values. The iterator element type is
+    /// (&'a UniCase<String>, &'a mut V).
     pub fn iter_mut(&mut self) -> IterMut<Key, V> {
         self.inner.iter_mut()
     }
 
+    /// An iterator visiting all keys in arbitrary order. The iterator element type is &'a UniCase<String>.
     pub fn keys(&self) -> Keys<Key, V> {
         self.inner.keys()
     }
 
+    /// Returns the number of elements in the map.
     pub fn len(&self) -> usize {
         self.inner.len()
     }
 
+    /// Removes a key from the map, returning the value at the key if the key was previously in the map.
+    /// The key may be a String, str or UniCase value.
     pub fn remove<K: Into<Key>>(&mut self, k: K) -> Option<V> {
         let key = k.into();
         self.inner.remove(&key)
     }
 
+    /// Removes a key from the map, returning the stored key and value if the key was previously in the map.
+    /// The key may be a String, str or UniCase value.
     pub fn remove_entry<K: Into<Key>>(&mut self, k: K) -> Option<(Key, V)> {
         let key = k.into();
         self.inner.remove_entry(&key)
     }
 
+    // Reserves capacity for at least `additional` more elements to be inserted
+    /// in the `HashMap`. The collection may reserve more space to avoid
+    /// frequent reallocations.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the new allocation size overflows [`usize`].
+    ///
+    /// [`usize`]: ../../std/primitive.usize.html
     pub fn reserve(&mut self, additional: usize) {
         self.inner.reserve(additional);
     }
 
+    /// Retains only the elements specified by the predicate.
+    /// In other words, remove all pairs (k, v) such that f(&k,&mut v) returns false.
     pub fn retain<F>(&mut self, f: F)
     where
         F: FnMut(&Key, &mut V) -> bool,
@@ -239,14 +292,19 @@ where
         self.inner.retain(f);
     }
 
+    /// Shrinks the capacity of the map as much as possible. It will drop down as much
+    /// as possible while maintaining the internal rules and possibly leaving some space
+    /// in accordance with the resize policy.
     pub fn shrink_to_fit(&mut self) {
         self.inner.shrink_to_fit();
     }
 
+    /// An iterator visiting all values in arbitrary order. The iterator element type is &'a V.
     pub fn values(&self) -> Values<Key, V> {
         self.inner.values()
     }
 
+    /// An iterator visiting all values mutably in arbitrary order. The iterator element type is &'a mut V.
     pub fn values_mut(&mut self) -> ValuesMut<Key, V> {
         self.inner.values_mut()
     }
