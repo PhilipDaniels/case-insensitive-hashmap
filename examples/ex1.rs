@@ -1,7 +1,7 @@
-use cihashmap::CiHashMap;
+use case_insensitive_hashmap::CaseInsensitiveHashMap;
 
 fn main() {
-    let mut map = CiHashMap::new();
+    let mut map = CaseInsensitiveHashMap::new();
     map.insert("A", 1);
     map.insert("B", 2);
     map.insert("a", 10);

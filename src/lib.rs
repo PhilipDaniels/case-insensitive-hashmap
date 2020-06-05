@@ -10,26 +10,26 @@ use unicase::UniCase;
 type Key = UniCase<String>;
 
 #[derive(Debug, Default, Clone)]
-pub struct CiHashMap<V, S = RandomState>
+pub struct CaseInsensitiveHashMap<V, S = RandomState>
 where
     S: BuildHasher,
 {
     inner: HashMap<Key, V, S>,
 }
 
-impl<V, S> Eq for CiHashMap<V, S>
+impl<V, S> Eq for CaseInsensitiveHashMap<V, S>
 where
     V: Eq,
     S: BuildHasher
 {
 }
 
-impl<V, S> PartialEq for CiHashMap<V, S>
+impl<V, S> PartialEq for CaseInsensitiveHashMap<V, S>
 where
     V: PartialEq,
     S: BuildHasher
 {
-    fn eq(&self, other: &CiHashMap<V, S>) -> bool {
+    fn eq(&self, other: &CaseInsensitiveHashMap<V, S>) -> bool {
         if self.len() != other.len() {
             return false;
         }
@@ -40,7 +40,7 @@ where
     }
 }
 
-impl<K, V, S> Extend<(K, V)> for CiHashMap<V, S>
+impl<K, V, S> Extend<(K, V)> for CaseInsensitiveHashMap<V, S>
 where
     K: Into<Key>,
     S: BuildHasher,
@@ -52,7 +52,7 @@ where
     }
 }
 
-impl<'a, K, V, S> Extend<(K, &'a V)> for CiHashMap<V, S>
+impl<'a, K, V, S> Extend<(K, &'a V)> for CaseInsensitiveHashMap<V, S>
 where
     K: Into<Key>,
     S: BuildHasher,
@@ -65,7 +65,7 @@ where
     }
 }
 
-impl<K, V> FromIterator<(K, V)> for CiHashMap<V>
+impl<K, V> FromIterator<(K, V)> for CaseInsensitiveHashMap<V>
 where
     K: Into<Key>,
 {
@@ -76,7 +76,7 @@ where
     }
 }
 
-impl<'a, V, S> IntoIterator for &'a CiHashMap<V, S>
+impl<'a, V, S> IntoIterator for &'a CaseInsensitiveHashMap<V, S>
 where
     S: BuildHasher
 {
@@ -88,7 +88,7 @@ where
     }
 }
 
-impl<'a, V, S> IntoIterator for &'a mut CiHashMap<V, S>
+impl<'a, V, S> IntoIterator for &'a mut CaseInsensitiveHashMap<V, S>
 where
     S: BuildHasher
 {
@@ -100,7 +100,7 @@ where
     }
 }
 
-impl<V, S> IntoIterator for CiHashMap<V, S>
+impl<V, S> IntoIterator for CaseInsensitiveHashMap<V, S>
 where
     S: BuildHasher
 {
@@ -112,7 +112,7 @@ where
     }
 }
 
-impl<'a, K, V, S> Index<K> for CiHashMap<V, S>
+impl<'a, K, V, S> Index<K> for CaseInsensitiveHashMap<V, S>
 where
     K: Into<Key>,
     S: BuildHasher,
@@ -125,7 +125,7 @@ where
     }
 }
 
-impl<V> CiHashMap<V, RandomState>
+impl<V> CaseInsensitiveHashMap<V, RandomState>
 {
     pub fn new() -> Self{
         Self {
@@ -133,12 +133,12 @@ impl<V> CiHashMap<V, RandomState>
         }
     }
 
-    pub fn with_capacity(capacity: usize) -> CiHashMap<V, RandomState> {
+    pub fn with_capacity(capacity: usize) -> CaseInsensitiveHashMap<V, RandomState> {
         Self::with_capacity_and_hasher(capacity, Default::default())
     }
 }
 
-impl<V, S> CiHashMap<V, S>
+impl<V, S> CaseInsensitiveHashMap<V, S>
 where
     S: BuildHasher
 {
@@ -146,7 +146,7 @@ where
         Self::with_capacity_and_hasher(0, hash_builder)
     }
 
-    pub fn with_capacity_and_hasher(capacity: usize, hash_builder: S) -> CiHashMap<V, S> {
+    pub fn with_capacity_and_hasher(capacity: usize, hash_builder: S) -> CaseInsensitiveHashMap<V, S> {
         Self {
             inner: HashMap::<Key, V, S>::with_capacity_and_hasher(capacity, hash_builder),
         }
@@ -254,18 +254,18 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::CiHashMap;
+    use super::CaseInsensitiveHashMap;
     use unicase::UniCase;
 
     #[test]
     fn new() {
-        let map = CiHashMap::<u8>::new();
+        let map = CaseInsensitiveHashMap::<u8>::new();
         assert_eq!(map.len(), 0);
     }
 
     #[test]
     fn with_capacity() {
-        let map = CiHashMap::<u8>::with_capacity(100);
+        let map = CaseInsensitiveHashMap::<u8>::with_capacity(100);
         assert!(map.capacity() >= 100);
     }
 
@@ -281,7 +281,7 @@ mod tests {
 
     #[test]
     fn clear() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         assert_eq!(map.len(), 0);
         map.insert("A", 1);
         assert_eq!(map.len(), 1);
@@ -294,7 +294,7 @@ mod tests {
 
     #[test]
     fn contains_key_str() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         assert!(map.contains_key("A"));
         assert!(map.contains_key("a"));
@@ -304,7 +304,7 @@ mod tests {
 
     #[test]
     fn contains_key_string() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         assert!(map.contains_key("A".to_string()));
         assert!(map.contains_key("a".to_string()));
@@ -314,7 +314,7 @@ mod tests {
 
     #[test]
     fn drain() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         map.insert("B", 2);
         let _d: Vec<_> = map.drain().collect();
@@ -323,7 +323,7 @@ mod tests {
 
     #[test]
     fn entry() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         let entry = map.entry("A");
         assert_eq!(entry.key(), &UniCase::new("A".to_string()));
@@ -331,7 +331,7 @@ mod tests {
 
     #[test]
     fn get_str() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         assert_eq!(map.get("A").unwrap(), &1);
         assert_eq!(map.get("a").unwrap(), &1);
@@ -341,14 +341,14 @@ mod tests {
 
     #[test]
     fn get_string() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         assert_eq!(map.get("A".to_string()).unwrap(), &1);
     }
 
     #[test]
     fn get_unicase() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         // Won't work with plain &str, which is annoying.
         let uc = UniCase::new("a".to_string());
@@ -357,7 +357,7 @@ mod tests {
 
     #[test]
     fn get_key_value() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         let result = map.get_key_value("a");
         assert_eq!(result.unwrap().0, &UniCase::new("a".to_string()));
@@ -366,7 +366,7 @@ mod tests {
 
     #[test]
     fn get_mut() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         assert_eq!(map.get_mut("a"), Some(&mut 1));
         assert!(map.get_mut("C").is_none());
@@ -374,7 +374,7 @@ mod tests {
 
     #[test]
     fn insert_str() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         let result = map.insert("A", 1);
         assert!(result.is_none());
         let result = map.insert("B", 2);
@@ -387,7 +387,7 @@ mod tests {
 
     #[test]
     fn insert_string() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A".to_string(), 1);
         map.insert("B".to_string(), 2);
         assert_eq!(map.len(), 2);
@@ -395,7 +395,7 @@ mod tests {
 
     #[test]
     fn is_empty() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         assert!(map.is_empty());
         map.insert("A", 1);
         assert!(!map.is_empty());
@@ -403,7 +403,7 @@ mod tests {
 
     #[test]
     fn iter() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A".to_string(), 1);
         map.insert("B".to_string(), 2);
 
@@ -414,7 +414,7 @@ mod tests {
 
     #[test]
     fn iter_mut() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A".to_string(), 1);
         map.insert("B".to_string(), 2);
 
@@ -429,7 +429,7 @@ mod tests {
 
     #[test]
     fn keys() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A".to_string(), 1);
         map.insert("B".to_string(), 2);
 
@@ -446,7 +446,7 @@ mod tests {
 
     #[test]
     fn len() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         assert_eq!(map.len(), 0);
         map.insert("A".to_string(), 1);
         assert_eq!(map.len(), 1);
@@ -458,7 +458,7 @@ mod tests {
 
     #[test]
     fn remove() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A".to_string(), 1);
         map.insert("B".to_string(), 2);
         assert_eq!(map.remove("b"), Some(2));
@@ -467,7 +467,7 @@ mod tests {
 
     #[test]
     fn remove_entry() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A".to_string(), 1);
         map.insert("B".to_string(), 2);
         assert_eq!(map.remove("b"), Some(2));
@@ -476,7 +476,7 @@ mod tests {
 
     #[test]
     fn retain() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A".to_string(), 1);
         map.insert("B".to_string(), 2);
         map.insert("C".to_string(), 1);
@@ -491,7 +491,7 @@ mod tests {
 
     #[test]
     fn shrink_to_fit() {
-        let mut map = CiHashMap::<u8>::with_capacity(100);
+        let mut map = CaseInsensitiveHashMap::<u8>::with_capacity(100);
         assert!(map.capacity() >= 100);
         map.insert("A".to_string(), 1);
         map.shrink_to_fit();
@@ -500,7 +500,7 @@ mod tests {
 
     #[test]
     fn values() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A".to_string(), 1);
         map.insert("B".to_string(), 2);
         map.insert("C".to_string(), 1);
@@ -512,7 +512,7 @@ mod tests {
 
     #[test]
     fn values_mut() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A".to_string(), 1);
         map.insert("B".to_string(), 2);
         map.insert("C".to_string(), 1);
@@ -528,12 +528,12 @@ mod tests {
 
     #[test]
     fn partial_eq() {
-        let mut map1 = CiHashMap::<u8>::new();
+        let mut map1 = CaseInsensitiveHashMap::<u8>::new();
         map1.insert("A".to_string(), 1);
         map1.insert("B".to_string(), 2);
         map1.insert("C".to_string(), 3);
 
-        let mut map2 = CiHashMap::<u8>::new();
+        let mut map2 = CaseInsensitiveHashMap::<u8>::new();
         map2.insert("C".to_string(), 3);
         map2.insert("B".to_string(), 2);
         map2.insert("A".to_string(), 1);
@@ -543,7 +543,7 @@ mod tests {
 
     #[test]
     fn extend() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A".to_string(), 1);
 
         let v = vec![("A", 2), ("B", 3), ("C", 4)];
@@ -556,7 +556,7 @@ mod tests {
 
     #[test]
     fn index() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         map.insert("B", 2);
 
@@ -566,7 +566,7 @@ mod tests {
 
     #[test]
     fn into_iterator_impls() {
-        let mut map = CiHashMap::<u8>::new();
+        let mut map = CaseInsensitiveHashMap::<u8>::new();
         map.insert("A", 1);
         map.insert("B", 2);
 
@@ -580,6 +580,6 @@ mod tests {
     fn from_iterator() {
         let v = vec![("A", 2), ("B", 3), ("C", 4)];
 
-        let _map: CiHashMap<u8> = v.into_iter().collect();
+        let _map: CaseInsensitiveHashMap<u8> = v.into_iter().collect();
     }
 }

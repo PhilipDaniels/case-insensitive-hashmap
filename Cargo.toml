@@ -1,6 +1,6 @@
 [package]
-name = "cihashmap"
-version = "0.1.0"
+name = "case_insensitive_hashmap"
+version = "1.0.0"
 authors = ["Philip Daniels <Philip.Daniels1971@gmail.com>"]
 edition = "2018"
 
