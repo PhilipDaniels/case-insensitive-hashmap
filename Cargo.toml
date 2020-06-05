@@ -1,6 +1,6 @@
 [package]
 name = "case_insensitive_hashmap"
-version = "0.9.0"
+version = "0.9.1"
 authors = ["Philip Daniels <Philip.Daniels1971@gmail.com>"]
 edition = "2018"
 license = "MIT"
@@ -8,7 +8,7 @@ readme = "README.md"
 repository = "https://github.com/PhilipDaniels/case-insensitive-hashmap"
 description = "A HashMap that uses case-insensitive strings as keys."
 keywords = ["case-insensitive", "hashmap", "case-folding", "unicase"]
-documentation = "https://docs.rs/case-insensitive-hash-map/"
+documentation = "https://docs.rs/case_insensitive_hashmap/"
 
 [dependencies]
 unicase = "2.6.0"
