@@ -149,7 +149,7 @@ where
     }
 }
 
-impl<'a, K, V, S> Index<K> for CaseInsensitiveHashMap<V, S>
+impl<K, V, S> Index<K> for CaseInsensitiveHashMap<V, S>
 where
     K: Into<Key>,
     S: BuildHasher,
@@ -502,7 +502,7 @@ mod tests {
         map.insert("A".to_string(), 1);
         map.insert("B".to_string(), 2);
 
-        let mut elems: Vec<_> = map.iter().map(|(_, v)| v.clone()).collect();
+        let mut elems: Vec<_> = map.iter().map(|(_, v)| *v).collect();
         elems.sort();
         assert_eq!(elems, vec![1, 2]);
     }
@@ -517,7 +517,7 @@ mod tests {
             *v += 10;
         }
 
-        let mut elems: Vec<_> = map.iter().map(|(_, v)| v.clone()).collect();
+        let mut elems: Vec<_> = map.iter().map(|(_, v)| *v).collect();
         elems.sort();
         assert_eq!(elems, vec![11, 12]);
     }
