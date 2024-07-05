@@ -39,7 +39,11 @@ assert_eq!(map["A"], 20);
 
 # Implementation
 
-This use the [UniCase](https://crates.io/crates/unicase) crate to handle
+This uses the [UniCase](https://crates.io/crates/unicase) crate to handle
 the case-insensitivity. Strings that are used as keys are wrapped in
 `UniCase` objects so that they hash and compare for equality in a
 case-insensitive manner.
+
+# Release Notes
+
+- 1.0.1 - bumped version of [UniCase](https://crates.io/crates/unicase) to 2.7.0.
